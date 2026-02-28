@@ -4,9 +4,9 @@
 -- Localization support for T-Lib
 --
 -- Usage:
---   T_Lib.L:GetText(key)        — get localized text by key
---   T_Lib.L:SetLocale(locale)   — set current locale (enUS, ruRU, etc.)
---   T_Lib.L:GetLocale()         — get current locale
+--   T_Lib.L:GetText(key)        -- get localized text by key
+--   T_Lib.L:SetLocale(locale)   -- set current locale (enUS, ruRU, etc.)
+--   T_Lib.L:GetLocale()         -- get current locale
 --
 -- Example:
 --   local text = T_Lib.L:GetText("BOSS_FOUND")

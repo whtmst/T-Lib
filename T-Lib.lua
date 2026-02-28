@@ -9,10 +9,10 @@
 --   3. Use API: T_Lib:FunctionName()
 --
 -- Modules:
---   - T_Lib.Bosses      — boss data
---   - T_Lib.Raids       — raid data
---   - T_Lib.L           — localization
---   - T_Lib.Utils       — utilities
+--   - T_Lib.Bosses      -- boss data
+--   - T_Lib.Raids       -- raid data
+--   - T_Lib.L           -- localization
+--   - T_Lib.Utils       -- utilities
 -- =============================================================================
 
 T_Lib = T_Lib or {}

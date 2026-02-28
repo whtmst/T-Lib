@@ -4,11 +4,11 @@
 -- Utility functions for T-Lib
 --
 -- Usage:
---   T_Lib.Utils:Print(...)           — print colored message
---   T_Lib.Utils:TableCount(tbl)      — get table length
---   T_Lib.Utils:TableContains(...)   — check if table has value
---   T_Lib.Utils:StripColor(text)     — remove color codes
---   T_Lib.Utils:MatchName(a, b)      — case-insensitive name match
+--   T_Lib.Utils:Print(...)           -- print colored message
+--   T_Lib.Utils:TableCount(tbl)      -- get table length
+--   T_Lib.Utils:TableContains(...)   -- check if table has value
+--   T_Lib.Utils:StripColor(text)     -- remove color codes
+--   T_Lib.Utils:MatchName(a, b)      -- case-insensitive name match
 -- =============================================================================
 
 T_Lib = T_Lib or {}
