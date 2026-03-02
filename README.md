@@ -86,41 +86,54 @@ end
 
 ## Supported Raids
 
+- Blackrock Spire (UBRS/LBRS)
+- Onyxia's Lair (Ony)
 - Molten Core (MC)
 - Blackwing Lair (BWL)
+- Karazhan (LKH/ToK)
 - Zul'Gurub (ZG)
-- Onyxia's Lair (Ony)
-- Naxxramas (Naxx)
+- Emerald Sanctum (ES)
 - Ruins of Ahn'Qiraj (AQ20)
 - Ahn'Qiraj (AQ40)
-- Blackrock Spire (UBRS/LBRS)
-- Emerald Sanctum (ES)
-- Karazhan (LKH/ToK)
 - Timbermaw Hold (TmH)
+- Naxxramas (Naxx)
 - World Bosses
 - TW Custom Bosses
 
 ## Supported Dungeons
 
 - Ragefire Chasm (RFC)
+- Frostmane Hollow (FH)
 - Deadmines (VC)
 - Wailing Caverns (WC)
 - Shadowfang Keep (SFK)
-- Stockade
+- The Stockade (Stock)
 - Blackfathom Deeps (BFD)
+- Windhorn Canyon (WhC)
 - Razorfen Kraul (RFK)
 - Razorfen Downs (RFD)
-- Gnomeregan
+- Gnomeregan (Gnome)
+- The Crescent Grove (TCG)
+- Dragonmaw Retreat (DMR)
 - Scarlet Monastery (SM)
-- Uldaman
-- Maraudon
+- Stormwrought Ruins (SwR)
+- Gilneas City (GC)
+- Maraudon (Mara)
+- Uldaman (Ulda)
 - Zul'Farrak (ZF)
 - Sunken Temple (ST)
 - Dire Maul (DM)
+- Hateforge Quarry (HQ)
+- Karazhan Crypt (KC)
 - Blackrock Depths (BRD)
-- Stratholme
-- Scholomance
+- Stratholme (Strat)
+- Scholomance (Scholo)
+- Stormwind Vault (SwV)
 - The Black Morass (BM)
+
+## Miscellaneous
+- Alliance Weapon Master's
+- Horde Weapon Master's
 
 ## Examples
 
