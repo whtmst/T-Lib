@@ -108,6 +108,24 @@ function T_Lib.Utils:Clamp(value, minVal, maxVal)
     return value
 end
 
+-- Format number with commas (1234567 -> "1,234,567")
+function T_Lib.Utils:FormatNumber(num)
+    if not num then return "0" end
+    local left, right = string.match(tostring(num), "^([^%d]*%d+)(%d*)$")
+    return left:gsub("%d(?=(%d%d%d)%D)", "%0,") .. right
+end
+
+-- Short number (1500000 -> "1.5m")
+function T_Lib.Utils:ShortNumber(num)
+    if not num then return "0" end
+    if num >= 1000000 then
+        return string.format("%.1fm", num / 1000000)
+    elseif num >= 1000 then
+        return string.format("%.1fk", num / 1000)
+    end
+    return tostring(num)
+end
+
 -- Merge two tables
 function T_Lib.Utils:MergeTables(t1, t2)
     local result = {}

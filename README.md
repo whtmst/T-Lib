@@ -57,6 +57,8 @@ end
 | `T_Lib:CompareBossName(a, b)` | Case-insensitive boss comparison |
 | `T_Lib:GetAllRaids()` | Get all raid names |
 | `T_Lib:GetAllRaidAliases()` | Get all raid aliases |
+| `T_Lib:GetBossType(bossName)` | Get boss type (Elemental, Dragon, etc.) |
+| `T_Lib:GetBossClassification(bossName)` | Get boss classification (Elite, Rare Elite, Boss) |
 
 ### Localization Module
 
@@ -83,6 +85,8 @@ end
 | `T_Lib.Utils:Clamp(val, min, max)` | Clamp value between min/max |
 | `T_Lib.Utils:CopyTable(tbl)` | Shallow copy table |
 | `T_Lib.Utils:DeepCopyTable(tbl)` | Deep copy table |
+| `T_Lib.Utils:FormatNumber(num)` | Format number with commas (1234567 → "1,234,567") |
+| `T_Lib.Utils:ShortNumber(num)` | Short number (1500000 → "1.5m") |
 
 ## Supported Raids
 
@@ -158,6 +162,26 @@ for _, boss in ipairs(bosses) do
     end
 end
 print(defeated .. "/" .. #bosses .. " bosses defeated")
+```
+
+### Get Boss Type and Classification
+
+```lua
+local bossName = UnitName("target")
+if T_Lib:IsBoss(bossName) then
+    local bossType = T_Lib:GetBossType(bossName)
+    local classification = T_Lib:GetBossClassification(bossName)
+    print("Boss: " .. bossName .. " (" .. bossType .. ") - " .. classification)
+end
+-- Output: "Boss: Ragnaros (Elemental) - Elite"
+```
+
+### Format Numbers
+
+```lua
+local health = 1500000
+print(T_Lib.Utils:FormatNumber(health))    -- "1,500,000"
+print(T_Lib.Utils:ShortNumber(health))     -- "1.5m"
 ```
 
 ### Localization
