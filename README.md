@@ -59,6 +59,8 @@ end
 | `T_Lib:GetAllRaidAliases()` | Get all raid aliases |
 | `T_Lib:GetBossType(bossName)` | Get boss type (Elemental, Dragon, etc.) |
 | `T_Lib:GetBossClassification(bossName)` | Get boss classification (Elite, Rare Elite, Boss) |
+| `T_Lib:GetBossNPCID(bossName)` | Get boss NPC ID by name |
+| `T_Lib:GetBossNameByID(npcId)` | Get boss name by NPC ID (reverse lookup) |
 
 ### Localization Module
 
@@ -147,7 +149,8 @@ end
 local bossName = UnitName("target")
 if T_Lib:IsBoss(bossName) then
     local raid = T_Lib:GetRaidByBoss(bossName)
-    print("Boss detected: " .. bossName .. " in " .. raid)
+    local npcId = T_Lib:GetBossNPCID(bossName)
+    print("Boss detected: " .. bossName .. " in " .. raid .. " (ID: " .. tostring(npcId) .. ")")
 end
 ```
 

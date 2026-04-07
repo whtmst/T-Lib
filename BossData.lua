@@ -18,6 +18,8 @@
 --   T_Lib:GetAllRaidAliases()           -- get all raid aliases
 --   T_Lib:GetBossType(bossName)         -- get boss type (Elemental, Dragon, etc.)
 --   T_Lib:GetBossClassification(boss)   -- get boss classification (Elite, Boss, Rare Elite)
+--   T_Lib:GetBossNPCID(bossName)        -- get boss NPC ID by name
+--   T_Lib:GetBossNameByID(npcId)        -- get boss name by NPC ID (reverse lookup)
 -- =============================================================================
 
 -- Ensure T_Lib exists
@@ -163,13 +165,24 @@ T_Lib.Raids = {
     },
     -- Timbermaw Hold (TmH)
     ["Timbermaw Hold"] = {
+        "Peroth'arn",
+        "Karrsh the Sentinel",
+        "Rotgrowl",
+        "Chieftain Partath",
+        "Trioch the Devourer",
+        "Selenaxx Foulheart",
+        "Ormanos the Cracked",
+        "Loktanag the Vile",
+        "Archdruid Kronn",
+        "Ursol",
     },
     -- Naxxramas (Naxx)
     ["Naxxramas"] = {
         "Patchwork Golem",
         "Deathknight Captain",
         "Deathknight Cavalier",
-        "Gargoyle",
+        "Plagued Gargoyle",
+        "Stoneskin Gargoyle",
         "Living Monstrosity",
         "Venom Stalker",
         "Patchwerk",
@@ -323,7 +336,7 @@ T_Lib.Raids = {
     },
     -- Windhorn Canyon (WhC)
     ["Windhorn Canyon"] = {
-        "Pathun Buskhide",
+        "Pathun Duskhide",
         "Ahgk'tos the Pure",
         "Ambassador Vortalus",
         "Walgan Bloodcaller",
@@ -467,7 +480,6 @@ T_Lib.Raids = {
         "Galgann Firehammer",
         "Grimlok",
         "Archaedas",
-        "Archaedas: Lower",
     },
     -- Zul'Farrak (ZF)
     ["Zul'Farrak"] = {
@@ -688,6 +700,629 @@ T_Lib.Raids = {
 }
 
 -- =============================================================================
+-- BOSS NPC IDs
+-- =============================================================================
+-- Maps boss names (enUS) to their NPC IDs.
+-- Used for: unit targeting, tooltip scanning, localization by ID.
+--
+-- Usage:
+--   local npcId = T_Lib:GetBossNPCID("Ragnaros")    -- returns number or nil
+--   local name  = T_Lib:GetBossNameByID(11502)      -- returns string or nil
+-- =============================================================================
+T_Lib.BossIDs = {
+    -- Upper Blackrock Spire
+    ["Pyroguard Emberseer"] = 9816,
+    ["Solakar Flamewreath"] = 10264,
+    ["Jed Runewatcher"] = 10509,
+    ["Goraluk Anvilcrack"] = 10899,
+    ["Warchief Rend Blackhand"] = 10429,
+    ["Gyth"] = 10339,
+    ["The Beast"] = 10430,
+    ["Lord Valthalak"] = 16042,
+    ["General Drakkisath"] = 10363,
+
+    -- Onyxia's Lair
+    ["Onyxia"] = 10184,
+    ["Broodcommander Axelus"] = 49018,
+
+    -- Molten Core
+    ["Core Hound"] = 11671,
+    ["Ancient Core Hound"] = 11673,
+    ["Lava Surger"] = 12101,
+    ["Flame Imp"] = 11669,
+    ["Incindis"] = 52145,
+    ["Lucifron"] = 12118,
+    ["Magmadar"] = 11982,
+    ["Garr"] = 12057,
+    ["Baron Geddon"] = 12056,
+    ["Shazzrah"] = 12264,
+    ["Golemagg the Incinerator"] = 11988,
+    ["Sulfuron Harbinger"] = 12098,
+    ["Majordomo Executus"] = 12018,
+    ["Basalthar"] = 65020,
+    ["Smoldaris"] = 65021,
+    ["Sorcerer-Thane Thaurissan"] = 57642,
+    ["Gehennas"] = 12259,
+    ["Ragnaros"] = 11502,
+
+    -- Blackwing Lair
+    ["Death Talon Wyrmguard"] = 12460,
+    ["Razorgore the Untamed"] = 12435,
+    ["Vaelastrasz the Corrupt"] = 13020,
+    ["Broodlord Lashlayer"] = 12017,
+    ["Firemaw"] = 11983,
+    ["Ebonroc"] = 14601,
+    ["Flamegor"] = 11981,
+    ["Chromaggus"] = 14020,
+    ["Nefarian"] = 11583,
+    ["Ezzel Darkbrewer"] = 65148,
+
+    -- Lower Karazhan Halls
+    ["Phantom Servant"] = 61205,
+    ["Master Blacksmith Rolfen"] = 61319,
+    ["Brood Queen Araxxna"] = 61221,
+    ["Grizikil"] = 61224,
+    ["Clawlord Howlfang"] = 61223,
+    ["Dark Rider Champion"] = 61204,
+    ["Lord Blackwald II"] = 61222,
+    ["Moroes"] = 61225,
+
+    -- Zul'Gurub
+    ["Gurubashi Bat Rider"] = 14750,
+    ["Gurubashi Berserker"] = 11352,
+    ["Mad Servant"] = 15111,
+    ["High Priestess Jeklik"] = 14517,
+    ["High Priest Venoxis"] = 14507,
+    ["High Priestess Mar'li"] = 14510,
+    ["Bloodlord Mandokir"] = 11382,
+    ["Gri'lek"] = 15082,
+    ["Hazza'rah"] = 15083,
+    ["Renataki"] = 15084,
+    ["Wushoolay"] = 15085,
+    ["Gahz'ranka"] = 15114,
+    ["High Priest Thekal"] = 14509,
+    ["High Priestess Arlokk"] = 14515,
+    ["Jin'do the Hexxer"] = 11380,
+    ["Hakkar"] = 14834,
+
+    -- Emerald Sanctum
+    ["Sanctum Dragonkin"] = 60743,
+    ["Sanctum Dreamer"] = 60742,
+    ["Sanctum Supressor"] = 61212,
+    ["Sanctum Wyrm"] = 60744,
+    ["Sanctum Wyrmkin"] = 60745,
+    ["Erennius"] = 60747,
+    ["Solnius"] = 60748,
+
+    -- Ruins of Ahn'Qiraj
+    ["Flesh Hunter"] = 15335,
+    ["Anubisath Guardian"] = 15355,
+    ["Hive'Zara Soldier"] = 15320,
+    ["Kurinnaxx"] = 15348,
+    ["Lieutenant General Andorov"] = 15471,
+    ["General Rajaxx"] = 15341,
+    ["Captain Qeez"] = 15391,
+    ["Captain Tuubid"] = 15392,
+    ["Captain Drenn"] = 15389,
+    ["Captain Xurrem"] = 15390,
+    ["Major Yeggeth"] = 15386,
+    ["Major Pakkon"] = 15388,
+    ["Colonel Zerran"] = 15385,
+    ["Moam"] = 15340,
+    ["Buru the Gorger"] = 15370,
+    ["Ayamiss the Hunter"] = 15369,
+    ["Ossirian the Unscarred"] = 15339,
+
+    -- Ahn'Qiraj
+    ["Qiraji Brainwasher"] = 15247,
+    ["Qiraji Champion"] = 15252,
+    ["Qiraji Mindslayer"] = 15246,
+    ["Anubisath Defender"] = 15277,
+    ["Anubisath Sentinel"] = 15264,
+    ["Anubisath Warder"] = 15311,
+    ["The Prophet Skeram"] = 15263,
+    ["Vem"] = 15544,
+    ["Lord Kri"] = 15511,
+    ["Princess Yauj"] = 15543,
+    ["Battleguard Sartura"] = 15516,
+    ["Fankriss the Unyielding"] = 15510,
+    ["Viscidus"] = 15299,
+    ["Princess Huhuran"] = 15509,
+    ["Emperor Vek'lor"] = 15276,
+    ["Emperor Vek'nilash"] = 15275,
+    ["Ouro"] = 15517,
+    ["C'Thun"] = 15727,
+
+    -- Timbermaw Hold
+    ["Peroth'arn"] = 60686,
+    ["Karrsh the Sentinel"] = 62934,
+    ["Rotgrowl"] = 62936,
+    ["Chieftain Partath"] = 62941,
+    ["Trioch the Devourer"] = 62946,
+    ["Selenaxx Foulheart"] = 62940,
+    ["Ormanos the Cracked"] = 62935,
+    ["Loktanag the Vile"] = 2139,
+    ["Archdruid Kronn"] = 62938,
+    ["Ursol"] = 62947,
+
+    -- Naxxramas
+    ["Patchwork Golem"] = 16017,
+    ["Deathknight Captain"] = 16145,
+    ["Deathknight Cavalier"] = 16163,
+    ["Plagued Gargoyle"] = 16446,
+    ["Stoneskin Gargoyle"] = 16168,
+    ["Living Monstrosity"] = 16021,
+    ["Venom Stalker"] = 15976,
+    ["Patchwerk"] = 16028,
+    ["Grobbulus"] = 15931,
+    ["Gluth"] = 15932,
+    ["Thaddius"] = 15928,
+    ["Anub'Rekhan"] = 15956,
+    ["Grand Widow Faerlina"] = 15953,
+    ["Maexxna"] = 15952,
+    ["Noth the Plaguebringer"] = 15954,
+    ["Heigan the Unclean"] = 15936,
+    ["Loatheb"] = 16011,
+    ["Instructor Razuvious"] = 16061,
+    ["Gothik the Harvester"] = 16060,
+    ["Thane Korth'azz"] = 16064,
+    ["Lady Blaumeux"] = 16065,
+    ["Highlord Mograine"] = 16062,
+    ["Sir Zeliek"] = 16063,
+    ["Sapphiron"] = 15989,
+    ["Kel'Thuzad"] = 15990,
+
+    -- Tower of Karazhan
+    ["Keeper Gnarlmoon"] = 61939,
+    ["Ley-Watcher Incantagos"] = 61946,
+    ["Anomalus"] = 61951,
+    ["Echo of Medivh"] = 61958,
+    ["King"] = 59967,
+    ["Sanv Tas'dal"] = 59981,
+    ["Rupturan the Broken"] = 59961,
+    ["Kruul"] = 59991,
+    ["Mephistroth"] = 93333,
+
+    -- World Bosses
+    ["Azuregos"] = 6109,
+    ["Cla'ckora"] = 59963,
+    ["Concavius"] = 92213,
+    ["Moo"] = 91799,
+    ["Lethon"] = 14888,
+    ["Emeriss"] = 14889,
+    ["Taerar"] = 14890,
+    ["Ysondre"] = 14887,
+    ["Lord Kazzak"] = 12397,
+    ["Nerubian Overseer"] = 16184,
+    ["Ostarius"] = 80935,
+    ["Dark Reaver of Karazhan"] = 80936,
+
+    -- TW Custom Bosses
+    ["Avalanchion"] = 14464,
+    ["The Windreaver"] = 14454,
+    ["Baron Charr"] = 14461,
+    ["Princess Tempestria"] = 14457,
+    ["Doctor Weavil"] = 15552,
+    ["Twilight Corrupter"] = 15625,
+    ["Trigore the Lasher"] = 3652,
+    ["Boahn"] = 3672,
+    ["Mad Magglish"] = 3655,
+    ["Marisa du'Paige"] = 599,
+    ["Brainwashed Noble"] = 596,
+    ["Foreman Thistlenettle"] = 626,
+    ["Kazkaz the Unholy"] = 5401,
+    ["Zekkis"] = 5400,
+    ["Veyzhak the Cannibal"] = 5399,
+    ["Magregan Deepshadow"] = 2932,
+    ["Techbot"] = 6231,
+
+    -- Ragefire Chasm
+    ["Oggleflint"] = 11517,
+    ["Taragaman the Hungerer"] = 11520,
+    ["Jergosh the Invoker"] = 11518,
+    ["Bazzalan"] = 11519,
+
+    -- Frostmane Hollow
+    ["Tan'sha The Sleek"] = 63133,
+    ["Battlemaster Ubukaz"] = 63131,
+    ["Kan'za The Seer"] = 63129,
+    ["Hailar The Frigid"] = 63130,
+
+    -- Deadmines
+    ["Jared Voss"] = 61961,
+    ["Rhahk'Zor"] = 644,
+    ["Miner Johnson"] = 3586,
+    ["Sneed"] = 643,
+    ["Sneed's Shredder"] = 642,
+    ["Gilnid"] = 1763,
+    ["Masterpiece Harvester"] = 61963,
+    ["Mr. Smite"] = 646,
+    ["Cookie"] = 645,
+    ["Captain Greenskin"] = 647,
+    ["Edwin VanCleef"] = 639,
+
+    -- Wailing Caverns
+    ["Lord Cobrahn"] = 3669,
+    ["Lady Anacondra"] = 3671,
+    ["Kresh"] = 3653,
+    ["Deviate Faerie Dragon"] = 5912,
+    ["Zandara Windhoof"] = 61968,
+    ["Lord Pythas"] = 3670,
+    ["Skum"] = 3674,
+    ["Vangros"] = 61965,
+    ["Lord Serpentis"] = 3673,
+    ["Verdan the Everliving"] = 5775,
+    ["Mutanus the Devourer"] = 3654,
+
+    -- Shadowfang Keep
+    ["Rethilgore"] = 3914,
+    ["Fel Steed"] = 3864,
+    ["Razorclaw the Butcher"] = 3886,
+    ["Baron Silverlaine"] = 3887,
+    ["Commander Springvale"] = 4278,
+    ["Sever"] = 14682,
+    ["Odo the Blindwatcher"] = 4279,
+    ["Deathsworn Captain"] = 3872,
+    ["Fenrus the Devourer"] = 4274,
+    ["Arugal's Voidwalker"] = 4627,
+    ["Wolf Master Nandos"] = 3927,
+    ["Archmage Arugal"] = 4275,
+    ["Prelate Ironmane"] = 61969,
+
+    -- The Stockade
+    ["Targorr the Dread"] = 1696,
+    ["Kam Deepfury"] = 1666,
+    ["Hamhock"] = 1717,
+    ["Bazil Thredd"] = 1716,
+    ["Dextren Ward"] = 1663,
+    ["Bruegal Ironknuckle"] = 1720,
+
+    -- Blackfathom Deeps
+    ["Ghamoo-ra"] = 4887,
+    ["Lady Sarevess"] = 4831,
+    ["Gelihast"] = 6243,
+    ["Lorgus Jett"] = 12902,
+    ["Velthelaxx the Defiler"] = 62530,
+    ["Baron Aquanis"] = 12876,
+    ["Twilight Lord Kelris"] = 4832,
+    ["Old Serra'kis"] = 4830,
+    ["Aku'mai"] = 4829,
+
+    -- Windhorn Canyon
+    ["Pathun Duskhide"] = 62779,
+    ["Ahgk'tos the Pure"] = 62778,
+    ["Ambassador Vortalus"] = 62783,
+    ["Walgan Bloodcaller"] = 62784,
+    ["Bonespeaker Narlgom"] = 62780,
+    ["Prophet Stormhoof"] = 62781,
+    ["Chieftain Shalk Blackwind"] = 62782,
+
+    -- Razorfen Kraul
+    ["Roogug"] = 6168,
+    ["Aggem Thorncurse"] = 4424,
+    ["Death Speaker Jargba"] = 4428,
+    ["Overlord Ramtusk"] = 4420,
+    ["Razorfen Spearhide"] = 4438,
+    ["Rotthorn"] = 62503,
+    ["Agathelos the Raging"] = 4422,
+    ["Blind Hunter"] = 4425,
+    ["Charlga Razorflank"] = 4421,
+    ["Earthcaller Halmgar"] = 4842,
+
+    -- Razorfen Downs
+    ["Tuten'kash"] = 7355,
+    ["Henry Stern"] = 8696,
+    ["Lady Falther'ess"] = 14686,
+    ["Plaguemaw the Rotting"] = 7356,
+    ["Mordresh Fire Eye"] = 7357,
+    ["Glutton"] = 8567,
+    ["Death Prophet Rakameg"] = 62679,
+    ["Ragglesnout"] = 7354,
+    ["Amnennar the Coldbringer"] = 7358,
+
+    -- Gnomeregan
+    ["Grubbis"] = 7361,
+    ["Chomper"] = 6215,
+    ["Viscous Fallout"] = 7079,
+    ["Electrocutioner 6000"] = 6235,
+    ["Crowd Pummeler 9-60"] = 6229,
+    ["Dark Iron Ambassador"] = 6228,
+    ["Mekgineer Thermaplugg"] = 7800,
+
+    -- The Crescent Grove
+    ["Grovetender Engryss"] = 92107,
+    ["Elder Blackmaw"] = 92106,
+    ["Elder \"One Eye\""] = 92105,
+    ["Keeper Ranathos"] = 92109,
+    ["High Priestess A'lathea"] = 92108,
+    ["Fenektis the Deceiver"] = 92111,
+    ["Master Raxxieth"] = 92110,
+
+    -- Dragonmaw Retreat
+    ["Gowlfang"] = 62057,
+    ["Bogpaw Truthsay"] = 62056,
+    ["Cavernweb Broodmother"] = 62066,
+    ["Web Master Torkon"] = 62067,
+    ["Garlok Flamekeeper"] = 62071,
+    ["Halgan Redbrand"] = 62069,
+    ["Slagfist Destroyer"] = 62068,
+    ["Overlord Blackheart"] = 62070,
+    ["Elder Hollowblood"] = 62038,
+    ["Searistrasz"] = 62072,
+    ["Zuluhed the Whacked"] = 62037,
+
+    -- Scarlet Monastery
+    ["Herod"] = 3975,
+    ["Armory Quartermaster Daghelm"] = 61982,
+    ["High Inquisitor Fairbanks"] = 4542,
+    ["Scarlet Commander Mograine"] = 3976,
+    ["High Inquisitor Whitemane"] = 3977,
+    ["Interrogator Vishas"] = 3983,
+    ["Scorn"] = 14693,
+    ["Bloodmage Thalnos"] = 4543,
+    ["Ironspine"] = 6489,
+    ["Azshir the Sleepless"] = 6490,
+    ["Fallen Champion"] = 6488,
+    ["Duke Dreadmoore"] = 61972,
+    ["Houndmaster Loksey"] = 3974,
+    ["Arcanist Doan"] = 6487,
+    ["Brother Wystan"] = 61983,
+
+    -- Stormwrought Ruins
+    ["Oronok Torn-Heart"] = 62548,
+    ["Dagar the Glutton"] = 62547,
+    ["Librarian Theodorus"] = 62552,
+    ["Duke Balor the IV"] = 62549,
+    ["Chieftain Stormsong"] = 62551,
+    ["Deathlord Tidebane"] = 62550,
+    ["Subjugator Halthas Shadecrest"] = 62652,
+    ["Mycellakos"] = 62664,
+    ["Eldermaw the Primordial"] = 62661,
+    ["Lady Drazare"] = 62665,
+    ["Ighal'for"] = 62671,
+    ["Mergothid"] = 62673,
+    ["Remains of the Innocent"] = 62670,
+
+    -- Gilneas City
+    ["Matthias Holtz"] = 61419,
+    ["Packmaster Ragetooth"] = 61420,
+    ["Judge Sutherland"] = 61421,
+    ["Dustivan Blackcowl"] = 61422,
+    ["Marshal Magnus Greystone"] = 61423,
+    ["Horsemaster Levvin"] = 61605,
+    ["Regent-Lady Celia Harlow"] = 61263,
+    ["Regent-Lord Mortimer Harlow"] = 61264,
+    ["Genn Greymane"] = 61418,
+
+    -- Maraudon
+    ["The Nameless Prophet"] = 13718,
+    ["Cursed Centaur"] = 11688,
+    ["Kolk"] = 13742,
+    ["Gelk"] = 13741,
+    ["Magra"] = 13740,
+    ["Veng"] = 13738,
+    ["Noxxion"] = 13282,
+    ["Razorlash"] = 12258,
+    ["Maraudos"] = 13739,
+    ["Lord Vyletongue"] = 12236,
+    ["Meshlok the Harvester"] = 12237,
+    ["Celebras the Cursed"] = 12225,
+    ["Landslide"] = 12203,
+    ["Tinkerer Gizlock"] = 13601,
+    ["Rotgrip"] = 13596,
+    ["Princess Theradras"] = 12201,
+
+    -- Uldaman
+    ["Baelog"] = 6906,
+    ["Eric \"The Swift\""] = 6907,
+    ["Olaf"] = 6908,
+    ["Revelosh"] = 6910,
+    ["Ironaya"] = 7228,
+    ["Obsidian Sentinel"] = 7023,
+    ["Ancient Stone Keeper"] = 7206,
+    ["Galgann Firehammer"] = 7291,
+    ["Grimlok"] = 4854,
+    ["Archaedas"] = 2748,
+
+    -- Zul'Farrak
+    ["Antu'sul"] = 8127,
+    ["Theka the Martyr"] = 7272,
+    ["Witch Doctor Zum'rah"] = 7271,
+    ["Nekrum Gutchewer"] = 7796,
+    ["Shadowpriest Sezz'ziz"] = 7275,
+    ["Dustwraith"] = 10081,
+    ["Sandfury Executioner"] = 7274,
+    ["Chief Ukorz Sandscalp"] = 7267,
+    ["Ruuzlu"] = 7797,
+    ["Hydromancer Velratha"] = 7795,
+    ["Gahz'rilla"] = 7273,
+    ["Zel'jeb the Ancient"] = 62495,
+    ["Champion Razjal the Quick"] = 62498,
+    ["Zerillis"] = 10082,
+
+    -- Sunken Temple
+    ["Gasher"] = 5713,
+    ["Loro"] = 5714,
+    ["Hukku"] = 5715,
+    ["Zolo"] = 5712,
+    ["Mijan"] = 5717,
+    ["Zul'Lor"] = 5716,
+    ["Atal'alarion"] = 8580,
+    ["Spawn of Hakkar"] = 5708,
+    ["Avatar of Hakkar"] = 8443,
+    ["Jammal'an the Prophet"] = 5710,
+    ["Ogom the Wretched"] = 5711,
+    ["Dreamscythe"] = 5721,
+    ["Weaver"] = 5720,
+    ["Morphaz"] = 5719,
+    ["Hazzas"] = 5722,
+    ["Shade of Eranikus"] = 5709,
+
+    -- Dire Maul
+    ["Pusillin"] = 14354,
+    ["Zevrim Thornhoof"] = 11490,
+    ["Hydrospawn"] = 13280,
+    ["Lethtendris"] = 14327,
+    ["Pimgib"] = 14349,
+    ["Alzzin the Wildshaper"] = 11492,
+    ["Isalien"] = 16097,
+    ["Guard Mol'dar"] = 14326,
+    ["Stomper Kreeg"] = 14322,
+    ["Guard Fengus"] = 14321,
+    ["Guard Slip'kik"] = 14323,
+    ["Captain Kromcrush"] = 14325,
+    ["King Gordok"] = 11501,
+    ["Cho'Rush the Observer"] = 14324,
+    ["Tendris Warpwood"] = 11489,
+    ["Illyanna Ravenoak"] = 11488,
+    ["Magister Kalendris"] = 11487,
+    ["Tsu'zee"] = 11467,
+    ["Immol'thar"] = 11496,
+    ["Lord Hel'nurath"] = 14506,
+    ["Prince Tortheldrin"] = 11486,
+    ["Revanchion"] = 14690,
+
+    -- Hateforge Quarry
+    ["High Foreman Bargul Blackhammer"] = 60735,
+    ["Engineer Figgles"] = 60736,
+    ["Corrosis"] = 60829,
+    ["Hatereaver Annihilator"] = 60734,
+    ["Har'gesh Doomcaller"] = 60737,
+
+    -- Karazhan Crypt
+    ["Marrowspike"] = 91920,
+    ["Hivaxxis"] = 91929,
+    ["Corpsemuncher"] = 91917,
+    ["Guard Captain Gort"] = 92935,
+    ["Archlich Enkhraz"] = 91916,
+    ["Commander Andreon"] = 91919,
+    ["Alarus"] = 91928,
+
+    -- Blackrock Depths
+    ["Overmaster Pyron"] = 9026,
+    ["Scarshield Quartermaster"] = 9046,
+    ["The Behemoth"] = 8924,
+    ["Lord Roccor"] = 9025,
+    ["High Interrogator Gerstahn"] = 9018,
+    ["Anub'shiah"] = 9031,
+    ["Eviscerator"] = 9029,
+    ["Gorosh the Dervish"] = 9027,
+    ["Grizzle"] = 9028,
+    ["Hedrum the Creeper"] = 9032,
+    ["Ok'thor the Breaker"] = 9030,
+    ["Theldren"] = 16059,
+    ["Houndmaster Grebmar"] = 9319,
+    ["Pyromancer Loregrain"] = 9024,
+    ["Warder Stilgiss"] = 9041,
+    ["Verek"] = 9042,
+    ["Watchman Doomgrip"] = 9476,
+    ["Fineous Darkvire"] = 9056,
+    ["Lord Incendius"] = 9017,
+    ["Bael'Gar"] = 9016,
+    ["General Angerforge"] = 9033,
+    ["Golem Lord Argelmach"] = 8983,
+    ["Hurley Blackbreath"] = 9537,
+    ["Phalanx"] = 9502,
+    ["Plugger Spazzring"] = 9499,
+    ["Ribbly Screwspigot"] = 9543,
+    ["Ambassador Flamelash"] = 9156,
+    ["Panzor the Invincible"] = 8923,
+    ["The Lyceum"] = 170558,
+    ["Magmus"] = 9938,
+    ["Emperor Dagran Thaurissan"] = 9019,
+    ["Princess Moira Bronzebeard"] = 8929,
+
+    -- Stratholme
+    ["Skul"] = 10393,
+    ["Stratholme Courier"] = 11082,
+    ["Balzaphon"] = 14684,
+    ["Hearthsinger Forresten"] = 10558,
+    ["The Unforgiven"] = 10516,
+    ["Timmy the Cruel"] = 10808,
+    ["Malor the Zealous"] = 11032,
+    ["Crimson Hammersmith"] = 11120,
+    ["Cannon Master Willey"] = 10997,
+    ["Archivist Galford"] = 10811,
+    ["Balnazzar"] = 10813,
+    ["Sothos"] = 16102,
+    ["Jarien"] = 16101,
+    ["Magistrate Barthilas"] = 10435,
+    ["Stonespine"] = 10809,
+    ["Baroness Anastari"] = 10436,
+    ["Black Guard Swordsmith"] = 11121,
+    ["Nerub'enkan"] = 10437,
+    ["Maleki the Pallid"] = 10438,
+    ["Ramstein the Gorger"] = 10439,
+    ["Baron Rivendare"] = 10440,
+    ["Postmaster Malown"] = 11143,
+    ["Atiesh"] = 16387,
+
+    -- Scholomance
+    ["Blood Steward of Kirtonos"] = 14861,
+    ["Kirtonos the Herald"] = 10506,
+    ["Jandice Barov"] = 10503,
+    ["Lord Blackwood"] = 14695,
+    ["Rattlegore"] = 11622,
+    ["Death Knight Darkreaver"] = 14516,
+    ["Marduk Blackpool"] = 10433,
+    ["Vectus"] = 10432,
+    ["Ras Frostwhisper"] = 10508,
+    ["Kormok"] = 16118,
+    ["Instructor Malicia"] = 10505,
+    ["Doctor Theolen Krastinov"] = 11261,
+    ["Lorekeeper Polkelt"] = 10901,
+    ["The Ravenian"] = 10507,
+    ["Lord Alexei Barov"] = 10504,
+    ["Lady Illucia Barov"] = 10502,
+    ["Darkmaster Gandling"] = 1853,
+
+    -- Stormwind Vault
+    ["Aszosh Grimflame"] = 80853,
+    ["Tham'Grarr"] = 80852,
+    ["Black Bride"] = 80850,
+    ["Damian"] = 80854,
+    ["Volkan Cruelblade"] = 80851,
+
+    -- Lower Blackrock Spire
+    ["Spirestone Butcher"] = 9219,
+    ["Highlord Omokk"] = 9196,
+    ["Spirestone Battle Lord"] = 9218,
+    ["Spirestone Lord Magus"] = 9217,
+    ["Shadow Hunter Vosh'gajin"] = 9236,
+    ["War Master Voone"] = 9237,
+    ["Mor Grayhoof"] = 16080,
+    ["Bannok Grimaxe"] = 9596,
+    ["Mother Smolderweb"] = 10596,
+    ["Crystal Fang"] = 10376,
+    ["Urok Doomhowl"] = 10584,
+    ["Quartermaster Zigris"] = 9736,
+    ["Halycon"] = 10220,
+    ["Gizrul the Slavener"] = 10268,
+    ["Ghok Bashguud"] = 9718,
+    ["Overlord Wyrmthalak"] = 9568,
+    ["Burning Felguard"] = 10263,
+
+    -- The Black Morass
+    ["Chronar"] = 65113,
+    ["Epidamu"] = 61575,
+    ["Drifting Avatar of Sand"] = 61316,
+    ["Time-Lord Epochronos"] = 65116,
+    ["Mossheart"] = 65124,
+    ["Antnormi"] = 65125,
+    ["Rotmaw"] = 65122,
+
+    -- Miscellaneous
+    ["Woo Ping"] = 11867,
+    ["Bixi Wobblebonk"] = 13084,
+    ["Buliwyf Stonehand"] = 11865,
+    ["Ilyenia Moonfire"] = 11866,
+    ["Hanashi"] = 2704,
+    ["Sayoc"] = 11868,
+    ["Archibald"] = 11870,
+    ["Ansekhwa"] = 11869,
+}
+
+-- =============================================================================
 -- BOSS METADATA
 -- =============================================================================
 -- Usage:
@@ -818,7 +1453,17 @@ T_Lib.BossMetadata = {
     ["Ouro"] = { type = "Aberration", classification = "Boss" },
     ["C'Thun"] = { type = "Old God", classification = "Boss" },
 
-    -- Raid bosses - Timbermaw Hold
+    -- Raid bosses - Timbermaw Hold (Nightmare of Ursol)
+    ["Peroth'arn"] = { type = "Demon", classification = "Boss" },
+    ["Karrsh the Sentinel"] = { type = "Humanoid", classification = "Boss" },
+    ["Rotgrowl"] = { type = "Humanoid", classification = "Boss" },
+    ["Chieftain Partath"] = { type = "Humanoid", classification = "Boss" },
+    ["Trioch the Devourer"] = { type = "Beast", classification = "Boss" },
+    ["Selenaxx Foulheart"] = { type = "Demon", classification = "Boss" },
+    ["Ormanos the Cracked"] = { type = "Giant", classification = "Boss" },
+    ["Loktanag the Vile"] = { type = "Elemental", classification = "Boss" },
+    ["Archdruid Kronn"] = { type = "Humanoid", classification = "Boss" },
+    ["Ursol"] = { type = "Beast", classification = "Boss" },
 
     -- Raid bosses - Naxxramas
     ["Patchwork Golem"] = { type = "Undead", classification = "Elite" },
@@ -1216,6 +1861,27 @@ function T_Lib:FindRaid(partialName)
     for raidName, _ in pairs(self.Raids) do
         if string.find(string.lower(raidName), lowerInput, 1, true) then
             return raidName
+        end
+    end
+    return nil
+end
+
+-- Get NPC ID of a boss by name
+function T_Lib:GetBossNPCID(bossName)
+    if not bossName or not self.BossIDs then
+        return nil
+    end
+    return self.BossIDs[bossName] or nil
+end
+
+-- Get boss name by NPC ID (reverse lookup)
+function T_Lib:GetBossNameByID(npcId)
+    if not npcId or not self.BossIDs then
+        return nil
+    end
+    for name, id in pairs(self.BossIDs) do
+        if id == npcId then
+            return name
         end
     end
     return nil
