@@ -1736,8 +1736,8 @@ end
 -- Initialize reverse mapping
 function T_Lib:InitializeBossData()
     for raidName, bosses in pairs(self.Raids) do
-        for _, bossName in ipairs(bosses) do
-            self.BossToRaid[bossName] = raidName
+        for i = 1, table.getn(bosses) do
+            self.BossToRaid[bosses[i]] = raidName
         end
     end
 end
