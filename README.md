@@ -35,8 +35,8 @@ print(raid) -- "Molten Core"
 
 -- Get all bosses in a raid
 local bosses = T_Lib:GetBossesByRaid("MC")
-for _, boss in ipairs(bosses) do
-    print(boss)
+for i = 1, table.getn(bosses) do
+    print(bosses[i])
 end
 ```
 
@@ -158,13 +158,23 @@ end
 
 ```lua
 local bosses = T_Lib:GetBossesByRaid("MC")
-local defeated = 0
-for _, boss in ipairs(bosses) do
-    if IsBossDead(boss) then
-        defeated = defeated + 1
+local total = table.getn(bosses)
+
+-- Iterate over bosses
+for i = 1, total do
+    local boss = bosses[i]
+    print(i .. ". " .. boss)
+end
+
+-- Example: track defeated bosses (use your own tracking logic)
+local defeated = {}  -- your saved variable
+local count = 0
+for i = 1, total do
+    if defeated[bosses[i]] then
+        count = count + 1
     end
 end
-print(defeated .. "/" .. #bosses .. " bosses defeated")
+print(count .. "/" .. total .. " bosses defeated")
 ```
 
 ### Get Boss Type and Classification
