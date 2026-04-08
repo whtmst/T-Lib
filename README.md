@@ -61,6 +61,9 @@ end
 | `T_Lib:GetBossClassification(bossName)` | Get boss classification (Elite, Rare Elite, Boss) |
 | `T_Lib:GetBossNPCID(bossName)` | Get boss NPC ID by name |
 | `T_Lib:GetBossNameByID(npcId)` | Get boss name by NPC ID (reverse lookup) |
+| `T_Lib:GetTrashByRaid(raid)` | Get trash mobs of a raid |
+| `T_Lib:GetRaidType(raid)` | Get instance type (Raid, Dungeon) |
+| `T_Lib:GetNPCsByRaid(raid)` | Get NPCs of a raid (trainers, vendors, etc.) |
 
 ### Localization Module
 
